@@ -1,0 +1,6 @@
+# Database connection libraries
+psycopg2-binary>=2.9.11
+SQLAlchemy>=2.0.36
+python-dotenv==1.0.0
+alembic>=1.13.0
+

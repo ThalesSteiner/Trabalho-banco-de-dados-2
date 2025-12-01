@@ -1,0 +1,122 @@
+//documentação da base de dados original - não finalizado
+
+  A tabela possui uma coluna sem nome e com todos os dados iguais a 0, aparentemente desnecessária. Todas as outras informações se referem a um (1) jogador em uma (1) partida.
+
+COLUNAS: 
+assists - assistências em derrotar inimigos - int
+
+GameID - ID da partida em que o jogador esteve (primary key)(unique) - string
+
+GameMode - modo de jogo da partida - string que só pode ser ARAM ou CLASSIC
+
+baronKills - ? - int 0 a 3
+
+bountyLevel - ? - int 1 a 19
+
+champExperience - experiência ganha do jogador na partida - int 0 a 43500
+
+champLevel - nivel do jogador (provavelmente no final da partida) - int 1 a 18
+
+championName - qual o personagem que o jogador está jogando - string
+
+damageDealtToObjectives - dano do jogador causado a objetos - int
+
+damageSelfMitigated - dano protegido, bloqueado ou reduzido pelo jogador (danos sofridos que não reduziram a própria barra de vida) - int
+
+deaths - vezes que o jogador foi derrotado - int 
+
+dragonKills - dragões derrotados - int
+
+firstBloodAssist - se assistiu a primeira kill do jogo - bool
+
+firstBloodKill - se causou a primeira kill do jogo - bool
+
+gameEndedInSurrender - se a partida acabou por desistência de algum dos times - bool
+
+goldEarned - ouro ganho na partida - int
+
+goldSpent - ouro gasto na partida - int
+
+individualPosition - local no qual o jogador ficou mais tempo no jogo - string que só pode ser TOP, MIDDLE, BOTTOM, JUNGLE ou UTILITY, entretanto, tem um caso escrito INVALID também
+
+inhibitorKills - inibidores destruidos pelo jogador (ou talvez pelo time) - int 0 a 6
+
+inhibitorsLost - inibidores perdidos pelo seu time - int 0 a 6
+
+item0 item1 item2 item3 item4 - ? - int 0 a 8001
+
+item5 - ? - int 0 a 7012
+
+item6 - ? - int 0 a 3513
+
+kills - derrotas causadas pelo jogador - int
+
+lane - ? (parece com a individualPosition, talvez seja aonde a kill foi feita, o jogo em si possui 3 paths com lanes) - string que só pode ser TOP, MIDDLE, BOTTOM, JUNGLE e NONE 
+
+largestCriticalStrike - Strike crítico mais longe do jogador - int
+
+largestKillingSpree - maior sequência de kills sem ser derrotado - int
+
+longestTimeSpentLiving - maior quantidade de tempo sem ter sido derrotado - int
+
+magicDamageDealtToChampions - dano mágico causado a outros jogadores - int
+
+magicDamageTaken - dano mágico sofrido - int
+
+nexusLost - nexus perdidos - int 0 ou 1
+
+objectivesStolen - objetivos roubados - int 0 a 2
+
+physicalDamageDealtToChampions - dano físico causado a outros jogadores - int
+
+physicalDamageTaken - dano físico sofrido - int
+
+spell1Casts spell2Casts spell3Casts spell4Casts - ? (alguma coisa de feitiços) - int
+
+summoner1Casts e summoner2Casts- ? (alguma coisa do invocador) - int
+
+summoner1Id e summoner2Id- id do invocador - int (não pode ser primary key pois possui id repetidos, deve ser tipo o nome do invocador)
+
+summonerId - id do invocador - string (primary key)
+
+teamEarlySurrendered - se o time se rendeu cedo - bool
+
+teamId - id do time - int que só pode ser 100 ou 200 (deve ser de qual lado)
+
+timeCCingOthers - ? - int
+
+timePlayed - tempo de partida - int
+
+totalDamageDealtToChampions - dano total causado a campeões - int
+
+totalDamageShieldedOnTeammates - dano total defendido em amigos (outros jogadores do seu time) - int
+
+totalDamageTaken - total de dano sofrido - int 
+
+totalHeal - total de pontos curados - int 
+
+totalHealsOnTeammates - total de pontos curados em amigos - int
+
+totalMinionsKilled - total de minions derrotados pelo jogador - int
+
+totalTimeCCDealt - ? - int 
+
+totalTimeSpentDead - total de tempo enquanto derrotado - int
+
+trueDamageDealtToChampions - dano real causado a jogadores - int
+
+trueDamageTaken - dano real sofrido - int
+
+turretTakedowns - kills por torretas - int
+
+turretsLost - torretas perdidas - int
+
+visionScore - ? - int
+
+visionWardsBoughtInGame - Wards visuais comprados na partida - int
+
+wardsKilled - wards eliminados - int
+
+wardsPlaced - wards posicionados - int
+
+win - se venceu a partida ou perdeu - bool

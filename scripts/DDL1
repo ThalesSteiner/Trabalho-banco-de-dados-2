@@ -55,3 +55,60 @@ CREATE TABLE n.Jogador (
     
     totalDamageDealtToChampions INT, 
     physicalDamageDealtToChampions INT, 
+    magicDamageDealtToChampions INT,
+    trueDamageDealtToChampions INT,
+    damageDealtToObjectives INT,
+    largestCriticalStrike INT,
+
+    totalDamageTaken INT,
+    physicalDamageTaken INT,
+    magicDamageTaken INT,
+    trueDamageTaken INT,
+    damageSelfMitigated INT,
+
+    visionScore INT,
+    wardsPlaced INT,
+    wardsKilled INT,
+    visionWardsBoughtInGame INT,
+    totalHeal INT,
+    totalHealsOnTeammates INT,
+    totalDamageShieldedOnTeammates INT,
+
+    timeCCingOthers INT,
+    totalTimeCCDealt INT,
+    longestTimeSpentLiving INT,
+    totalTimeSpentDead INT,
+
+    turretTakedowns INT,
+    inhibitorKills INT,
+    objectivesStolen INT,
+    firstBloodKill BOOLEAN,
+    firstBloodAssist BOOLEAN,
+    largestKillingSpree INT,
+
+    spell1Casts INT DEFAULT 0,
+    spell2Casts INT DEFAULT 0,
+    spell3Casts INT DEFAULT 0,
+    spell4Casts INT DEFAULT 0,
+    summoner1Id INT,
+    summoner1Casts INT DEFAULT 0,
+    summoner2Id INT,
+    summoner2Casts INT DEFAULT 0,
+
+    CONSTRAINT pk_jogador PRIMARY KEY (GameID, summonerId),
+    CONSTRAINT fk_jogador_partida FOREIGN KEY (GameID) REFERENCES n.Partida(GameID) ON DELETE CASCADE,
+    CONSTRAINT fk_jogador_summoner FOREIGN KEY (summonerId) REFERENCES n.Summoner(summonerId) ON DELETE CASCADE,
+    CONSTRAINT fk_jogador_champion FOREIGN KEY (championName) REFERENCES n.Champion(championName) ON DELETE SET NULL,
+    CONSTRAINT fk_jogador_team FOREIGN KEY (GameID, teamId) REFERENCES n.TimeStats(GameID, teamId)
+);
+
+
+CREATE TABLE n.JogadorItem (
+    GameID VARCHAR(50),
+    summonerId VARCHAR(255),
+    slotIndex INT NOT NULL CHECK (slotIndex BETWEEN 0 AND 6),
+    itemId INT NOT NULL,
+
+    CONSTRAINT pk_jogador_item PRIMARY KEY (GameID, summonerId, slotIndex),
+    CONSTRAINT fk_item_jogador FOREIGN KEY (GameID, summonerId) REFERENCES n.Jogador(GameID, summonerId) ON DELETE CASCADE
+);

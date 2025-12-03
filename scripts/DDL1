@@ -1,0 +1,57 @@
+CREATE SCHEMA IF NOT EXISTS n;
+
+
+CREATE TABLE n.Champion (
+    championName VARCHAR(50) PRIMARY KEY 
+);
+
+CREATE TABLE n.Summoner (
+    summonerId VARCHAR(100) PRIMARY KEY
+);
+
+
+CREATE TABLE n.Partida (
+    GameID VARCHAR(50) PRIMARY KEY,
+    GameMode VARCHAR(20) NOT NULL CHECK (GameMode IN ('ARAM','CLASSIC')),
+    timePlayed INT NOT NULL,
+    gameEndedInSurrender BOOLEAN
+);
+
+
+CREATE TABLE n.TimeStats (
+    GameID VARCHAR(50),
+    teamId INT NOT NULL CHECK (teamId IN (100, 200)),
+    win BOOLEAN,
+    teamEarlySurrendered BOOLEAN,
+    baronKills INT DEFAULT 0,
+    dragonKills INT DEFAULT 0,
+    inhibitorsLost INT CHECK (inhibitorsLost BETWEEN 0 AND 9), 
+    turretsLost INT DEFAULT 0,
+    nexusLost INT CHECK (nexusLost IN (0, 1)),
+    
+    CONSTRAINT pk_timestats PRIMARY KEY (GameID, teamId),
+    CONSTRAINT fk_timestats_partida FOREIGN KEY (GameID) REFERENCES n.Partida(GameID) ON DELETE CASCADE
+);
+
+CREATE TABLE n.Jogador (
+    GameID VARCHAR(50),
+    summonerId VARCHAR(255),
+    championName VARCHAR(50),
+    teamId INT,
+
+    individualPosition VARCHAR(7) CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY')),
+    lane VARCHAR(6) CHECK (lane IN ('TOP','MIDDLE','BOTTOM','JUNGLE','NONE')),
+    
+    champLevel INT CHECK (champLevel BETWEEN 1 AND 18),
+    champExperience INT,
+    
+    kills INT DEFAULT 0,
+    deaths INT DEFAULT 0,
+    assists INT DEFAULT 0,
+    goldEarned INT DEFAULT 0,
+    goldSpent INT DEFAULT 0,
+    totalMinionsKilled INT DEFAULT 0,
+    bountyLevel INT,
+    
+    totalDamageDealtToChampions INT, 
+    physicalDamageDealtToChampions INT, 

@@ -8,14 +8,14 @@ CREATE TABLE n.ContaJogador (
 
 -- O Campeao (Personagem do jogo) existe independente de quem joga.
 CREATE TABLE n.Campeao (
-    championID SERIAL PRIMARY KEY
+    championID SERIAL PRIMARY KEY,
     championName VARCHAR(50) NOT NULL UNIQUE 
 );
 
 
 CREATE TABLE n.Partida (
     GameID VARCHAR(50) PRIMARY KEY,
-    GameMode VARCHAR(10) NOT NULL CHECK (GameMode IN ('ARAM','CLASSIC'))
+    GameMode VARCHAR(10) NOT NULL CHECK (GameMode IN ('ARAM','CLASSIC')),
     timePlayed INT NOT NULL 
 );
 

@@ -28,7 +28,7 @@ CREATE TABLE n.Time (
     teamEarlySurrendered BOOLEAN,
     gameEndedInSurrender BOOLEAN,
     nexusLost INT CHECK (nexusLost IN (0,1)),
-    inhibitorsLost INT CHECK (inhibitorsLost BETWEEN 0 AND 6),
+    inhibitorsLost INT CHECK (inhibitorsLost BETWEEN 0 AND 10),
     turretsLost INT,
     PRIMARY KEY (GameID, teamId),
     FOREIGN KEY (GameID) REFERENCES n.Partida(GameID)
@@ -41,7 +41,7 @@ CREATE TABLE n.Participacao (
     summonerId VARCHAR(100) NOT NULL,
     championID INT NOT NULL,    
     teamId INT NOT NULL,    
-    individualPosition VARCHAR(7) CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','INVALID')),
+    individualPosition VARCHAR(7) CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','Invalid')),
     lane VARCHAR(6) CHECK (lane IN ('TOP','MIDDLE','BOTTOM','JUNGLE','NONE')),
     PRIMARY KEY (GameID, summonerId),
 
@@ -57,7 +57,7 @@ CREATE TABLE n.JogadorItem (
     GameID VARCHAR(50) NOT NULL,
     summonerId VARCHAR(100) NOT NULL,
     champLevel INT CHECK (champLevel BETWEEN 1 AND 18),
-    champExperience INT CHECK (champExperience BETWEEN 0 AND 43500),
+    champExperience INT CHECK (champExperience BETWEEN 0 AND 43518),
     item0 INT, item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT,
     summoner1Id INT, summoner2Id INT,
     summoner1Casts INT, summoner2Casts INT,

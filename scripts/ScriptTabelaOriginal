@@ -20,7 +20,7 @@ CREATE TABLE o.Tabelona (
     gameEndedInSurrender BOOLEAN,
     goldEarned INT,
     goldSpent INT,
-    individualPosition VARCHAR(7) CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','INVALID')),
+    individualPosition VARCHAR(7) CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','Invalid')),
     inhibitorKills INT CHECK (inhibitorKills BETWEEN 0 AND 6),
     inhibitorsLost INT CHECK (inhibitorsLost BETWEEN 0 AND 8),
     item0 INT,

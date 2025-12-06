@@ -1,0 +1,14 @@
+﻿TABELA CONTAJOGADOR;;;;
+Coluna;Tipo ;Descrição;Exemplos;Restrições 
+summonerId;VARCHAR(100);ID único da conta ;Ex: 4UyG6....;PK 
+;;;;
+TABELA CAMPEAO;;;;
+Coluna;Tipo ;Descrição;Exemplos;Restrições
+championID;SERIAL;ID numérico interno para o campeão.;1;PK / SERIAL
+championName;VARCHAR(50);Nome do campeão utilizado;Lucian;NOT NULL / UNIQUE
+;;;;
+TABELA PARTIDA;;;;
+Coluna;Tipo;Descrição;Exemplos;Restrições
+GameID;VARCHAR(50);ID da partida ;NA1_4430908515';PK
+GameMode;VARCHAR(10);Modo de jogo;CLASSIC';CHECK ('ARAM', 'CLASSIC')
+timePlayed;INT;Tempo total da partida (segundos);1850;NOT NULL

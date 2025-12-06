@@ -1,0 +1,31 @@
+INSERT INTO n.ContaJogador (summonerId)
+SELECT DISTINCT summonerId 
+FROM o.Tabelona;
+
+
+INSERT INTO n.Campeao (championName)
+SELECT DISTINCT championName 
+FROM o.Tabelona;
+
+
+INSERT INTO n.Partida (GameID, GameMode, timePlayed)
+SELECT DISTINCT GameID, GameMode, timePlayed
+FROM o.Tabelona;
+
+
+INSERT INTO n.Time (GameID, teamId, win, teamEarlySurrendered, gameEndedInSurrender, nexusLost, inhibitorsLost, turretsLost)
+SELECT DISTINCT 
+    GameID, teamId, win, teamEarlySurrendered, gameEndedInSurrender, nexusLost, inhibitorsLost, turretsLost
+FROM o.Tabelona;
+
+
+INSERT INTO n.Participacao (GameID, summonerId, championID, teamId, individualPosition, lane)
+SELECT 
+    t.GameID, 
+    t.summonerId, 
+    c.championID, 
+    t.teamId, 
+    t.individualPosition, 
+    t.lane
+FROM o.Tabelona t
+JOIN n.Campeao c ON t.championName = c.championName;

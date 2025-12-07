@@ -1,4 +1,4 @@
-//documentação da base de dados original - não finalizado
+//documentação da base de dados original
 
   A tabela possui uma coluna sem nome e com todos os dados iguais a 0, aparentemente desnecessária. Todas as outras informações se referem a um (1) jogador em uma (1) partida.
 
@@ -9,9 +9,9 @@ GameID - ID da partida em que o jogador esteve (primary key)(unique) - string
 
 GameMode - modo de jogo da partida - string que só pode ser ARAM ou CLASSIC
 
-baronKills - ? - int 0 a 3
+baronKills - kills do baron - int 0 a 3
 
-bountyLevel - ? - int 1 a 19
+bountyLevel - nivel - int 1 a 19
 
 champExperience - experiência ganha do jogador na partida - int 0 a 43500
 
@@ -43,15 +43,15 @@ inhibitorKills - inibidores destruidos pelo jogador (ou talvez pelo time) - int 
 
 inhibitorsLost - inibidores perdidos pelo seu time - int 0 a 6
 
-item0 item1 item2 item3 item4 - ? - int 0 a 8001
+item0 item1 item2 item3 item4 - itens do jogador - int 0 a 8001
 
-item5 - ? - int 0 a 7012
+item5 - int 0 a 7012
 
-item6 - ? - int 0 a 3513
+item6 - int 0 a 3513
 
 kills - derrotas causadas pelo jogador - int
 
-lane - ? (parece com a individualPosition, talvez seja aonde a kill foi feita, o jogo em si possui 3 paths com lanes) - string que só pode ser TOP, MIDDLE, BOTTOM, JUNGLE e NONE 
+lane - (parece com a individualPosition, talvez seja aonde a kill foi feita, o jogo em si possui 3 paths com lanes) - string que só pode ser TOP, MIDDLE, BOTTOM, JUNGLE e NONE 
 
 largestCriticalStrike - Strike crítico mais longe do jogador - int
 
@@ -111,7 +111,7 @@ turretTakedowns - kills por torretas - int
 
 turretsLost - torretas perdidas - int
 
-visionScore - ? - int
+visionScore - pontos de vision - int
 
 visionWardsBoughtInGame - Wards visuais comprados na partida - int
 

@@ -12,3 +12,14 @@ Coluna;Tipo;Descrição;Exemplos;Restrições
 GameID;VARCHAR(50);ID da partida ;NA1_4430908515';PK
 GameMode;VARCHAR(10);Modo de jogo;CLASSIC';CHECK ('ARAM', 'CLASSIC')
 timePlayed;INT;Tempo total da partida (segundos);1850;NOT NULL
+;;;;
+TABELA TIME;;;;
+Coluna;Tipo ;Descrição;Exemplos;Restrições
+GameID; Varchar(50); ID numerico que pode ter um inicio de varchar; 402934294 , NA1_40381732,etc. ; PK e FK do n.Partida(GameId)
+teamId; INT ; ID numerico do time no jogo, no qual mostra de qual lado é o time; só pode ser 100 ou 200; PK, NOT NULL CHECK (teamId IN (100,200))
+win; BOOLEAN ; Se o time venceu
+teamEarlySurrendered; BOOLEAN ; se o time desistiu cedo no jogo
+gameEndedInSurrender; BOOLEAN ; se o jogo terminou em desistência 
+nexusLost; INT ; Quantos nexus foram perdidos, apesar de só ter um por time; - ; CHECK (nexusLost IN (0,1)),
+inhibitorsLost; INT ; Quantos inibidores foram perdidos pelo time; De 0 a 10 ; CHECK (inhibitorsLost BETWEEN 0 AND 10),
+turretsLost; INT; Quantas torretas foram perdidas pelo time; 1,2,10,15... ; -

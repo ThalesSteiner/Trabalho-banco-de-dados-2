@@ -83,6 +83,8 @@ CREATE TABLE n.Stats_Jogador (
     goldEarned INT, goldSpent INT, totalMinionsKilled INT,
     totalTimeSpentDead INT,
 
+    longestTimeSpentLiving INT,
+    
     PRIMARY KEY (GameID, summonerId),
     FOREIGN KEY (GameID, summonerId) REFERENCES n.Participacao(GameID, summonerId)
 );

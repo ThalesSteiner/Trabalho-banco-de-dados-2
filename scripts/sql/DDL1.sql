@@ -85,6 +85,17 @@ CREATE TABLE n.Stats_Jogador (
 
     longestTimeSpentLiving INT,
     magicDamageTaken INT,
+    timeCCingOthers INT,
+    totalDamageShieldedOnTeammates INT,
+    physicalDamageTaken INT,
+    magicDamageTaken INT,
+    trueDamageTaken INT,
+    totalHeal INT,
+    totalHealsOnTeammates INT,
+    damageDealtToObjectives INT,
+    visionWardsBoughtInGame INT,
+    objectivesStolen INT,
+    totalTimeCCDealt INT,
     
     PRIMARY KEY (GameID, summonerId),
     FOREIGN KEY (GameID, summonerId) REFERENCES n.Participacao(GameID, summonerId)

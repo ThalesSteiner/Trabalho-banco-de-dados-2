@@ -1,1 +1,31 @@
+--documentação da DATE WAREHOUSE (tabelas fato e dimensões)
+
+NOME // TIPO // RESTRIÇÕES // DESCRIÇÃO
+
+DIMENSÃO TIME:
+timePK; SERIAL ; PK; Chave da dimensão time, antigo 
+teamId; INT ; IN 100,200 ; Se o time é o 100 ou o 200 (lado)
+win; BOOLEAN ; - ; Se ganhou a partida
+teamEarlySurrendered; BOOLEAN; - ; Se o time desisitu cedo
+gameEndedInSurrender; BOOLEAN; - ; Se o jogo terminou com desistência
+nexusLost; INT; IN 0,1 ; nexus perdidos (0 ou 1)
+inhibitorsLost; INT; BETWEEN 0 AND 10 ; inibidores perdidos pelo time
+turretsLost; INT; - ; torretas perdidas pelo time
+
+DIMENSÃO PARTIDA:
+partidaPK; SERIAL; PK; Chave da dimensão partida
+GameID; VARCHAR(50); NOT NULL e UNIQUE; ID da partida
+GameMode; VARCHAR(10); IN ('ARAM','CLASSIC') ; modo de jogo da partida
+timePlayed; INT ; - ; tempo jogado em segundos
+
+DIMENSÃO CONTAJOGADOR:
+contajogadorPK; SERIAL; PK; Chave da dimensão contajogador
+summonerId; VARCHAR(100); NOT NULL e UNIQUE; ID único da conta
+
+DIMENSÃO CAMPEÃO:
+campeaoPK; SERIAL; PK; Chave da dimensão campeão
+championID; INT; NOT NULL; Id do campeão (personagem)
+championName; VARCHAR(50); NOT NULL e UNIQUE; nome do personagem
+
+--em processo, pausa para dormir
 

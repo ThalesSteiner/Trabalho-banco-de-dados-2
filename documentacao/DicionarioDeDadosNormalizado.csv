@@ -23,3 +23,66 @@ gameEndedInSurrender; BOOLEAN ; se o jogo terminou em desistência
 nexusLost; INT ; Quantos nexus foram perdidos, apesar de só ter um por time; - ; CHECK (nexusLost IN (0,1)),
 inhibitorsLost; INT ; Quantos inibidores foram perdidos pelo time; De 0 a 10 ; CHECK (inhibitorsLost BETWEEN 0 AND 10),
 turretsLost; INT; Quantas torretas foram perdidas pelo time; 1,2,10,15... ; -
+;;;;
+TABELA PARTICIPACAO;;;;
+Coluna;Tipo;Descrição;Exemplos;Restrições
+GameID;VARCHAR(50);ID da partida ;NA1_4430908515';PK e FK de n.Time(GameId)
+teamId; INT ; ID numerico do time no jogo, no qual mostra de qual lado é o time; só pode ser 100 ou 200; PK, FK de n.Time(GameId) e NOT NULL CHECK (teamId IN (100,200))
+summonerId; VARCHAR(100);ID do summoner;4nasNajbdOCMncavotnaofenx; FK DE n.ContaJogador(summonerId) e NOT NULL
+championID; INT; ID do personagem; 1, 2, 5 , 10...; FK de n.Campeao(championID) e NOT NULL 
+individualPosition; VARCHAR(7); qual a posição individual real do jogador no jogo; CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','Invalid')),
+lane; VARCHAR(6); qual a posição declarada pelo jogador no inicio; CHECK (lane IN ('TOP','MIDDLE','BOTTOM','JUNGLE','NONE')),    
+;;;;
+TABELA JOGADORITEM;;;;  
+Coluna;Tipo;Descrição;Exemplos;Restrições
+GameID;VARCHAR(50);ID da partida ;NA1_4430908515';PK, FK de n.Participacao(GameId) e NOT NULL
+summonerId; VARCHAR(100);ID do summoner;4nasNajbdOCMncavotnaofenx; FK DE n.Participacao(summonerId) e NOT NULL
+champLevel; INT; nivel do personagem ; 1,2,5,18...; CHECK (champLevel BETWEEN 1 AND 18),
+champExperience; INT; experiencia do personagem; 10032,39138...; CHECK (champExperience BETWEEN 0 AND 43518),
+item0 INT, item1 INT, item2 INT, item3 INT, item4 INT, item5 INT, item6 INT; todos são o id de cada item utilizado pelo jogador; - ; -
+summoner1Id INT, summoner2Id INT; Id dos summoners (qual o personagem escolhido); 1 , 2, 5...; -
+summoner1Casts INT, summoner2Casts INT; Quantidade de vezes que o feitiço de invocador 1/2 foi usado; 1,2,5,10...; -
+spell1Casts INT, spell2Casts INT, spell3Casts INT, spell4Casts INT, Quantidade de vezes que cada feitiço foi usado; 1,2,5,10...; -
+;;;;
+TABELA STATS_JOGADOR;;;;  
+Coluna;Tipo;Descrição;Exemplos;Restrições
+GameID;VARCHAR(50);ID da partida ;NA1_4430908515';PK, FK de n.Participacao(GameId) e NOT NULL
+summonerId; VARCHAR(100);ID do summoner;4nasNajbdOCMncavotnaofenx; FK DE n.Participacao(summonerId) e NOT NULL
+kills; INT; quantos jogadores o jogador derrotou; - ; -
+deaths; INT; quantas vezes o jogador foi derrotado; - ; -
+assists; INT; quantos jogadores o jogador assistiu na derrota; - ; -
+largestCriticalStrike;int;Maior crítico causado;≥ 0
+largestKillingSpree;int;Maior sequência viva com kills;≥ 0
+longestTimeSpentLiving;int;Maior tempo vivo (segundos);≥ 0
+magicDamageDealtToChampions;int;Dano mágico causado a campeões;≥ 0
+magicDamageTaken;int;Dano mágico recebido;≥ 0
+timeCCingOthers;int;Tempo de controle de grupo aplicado em inimigos;≥ 0
+firstBloodAssist;bool;Assistiu o First Blood;true/false
+firstBloodKill;bool;Realizou o First Blood;true/false
+bountyLevel;int;Nível de recompensa atual do campeão (bounty);0–29
+totalDamageDealtToChampions;int;Dano total causado a campeões;≥ 0
+physicalDamageDealtToChampions;int;Dano físico causado a campeões;≥ 0
+physicalDamageTaken;int;Dano físico recebido;≥ 0
+magicDamageDealtToChampions;int;Dano mágico causado a campeões;≥ 0
+magicDamageTaken;int;Dano mágico recebido;≥ 0
+trueDamageDealtToChampions;int;True damage causado a campeões;≥ 0
+trueDamageTaken;int;True damage recebido;≥ 0
+totalDamageTaken;int;Total de dano recebido;≥ 0
+totalHeal;int;Total de cura aplicada;≥ 0
+totalHealsOnTeammates;int;Cura aplicada aos aliados;≥ 0
+totalMinionsKilled;int;Minions abatidos;≥ 0
+totalTimeSpentDead;int;Tempo total morto;≥ 0
+damageSelfMitigated;int;Dano mitigado via armadura/escudo;≥ 0
+damageDealtToObjectives;int;Dano causado a objetivos;≥ 0
+visionScore;int;Pontos totais de visão gerados;≥ 0
+visionWardsBoughtInGame;int;Wards de controle comprados;≥ 0
+wardsKilled;int;Wards destruídas;≥ 0
+wardsPlaced;int;Wards colocadas;≥ 0
+turretTakedowns;int;Torres destruídas com participação;≥ 0
+inhibitorKills;int;Inibidores destruídos;0–7
+dragonKills;int;Dragões abatidos com participação;0–4
+baronKills;int;Quantidade de barões abatidos com participação do jogador;0–3
+goldEarned;int;Ouro total obtido;≥ 0
+goldSpent;int;Ouro total gasto;≥ 0 
+objectivesStolen;int;Objetivos roubados (ex: dragão/barão);0–3
+totalTimeCCDealt;int;Total de tempo de CC aplicado;≥ 0

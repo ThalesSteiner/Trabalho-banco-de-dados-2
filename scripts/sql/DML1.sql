@@ -53,7 +53,7 @@ INSERT INTO n.Stats_Jogador (
     turretTakedowns, inhibitorKills, dragonKills, baronKills, 
     goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead, 
     
-    longestTimeSpentLiving , magicDamageTaken ,timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
+    longestTimeSpentLiving ,timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
     trueDamageTaken , totalHeal,totalHealsOnTeammates, damageDealtToObjectives,visionWardsBoughtInGame , objectivesStolen ,totalTimeCCDealt
 )
 SELECT 
@@ -64,7 +64,7 @@ SELECT
     turretTakedowns, inhibitorKills, dragonKills, baronKills, 
     goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead ,
 
-     longestTimeSpentLiving , magicDamageTaken ,timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
+     longestTimeSpentLiving , timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
     trueDamageTaken , totalHeal,totalHealsOnTeammates, damageDealtToObjectives,visionWardsBoughtInGame , objectivesStolen ,totalTimeCCDealt
     
 FROM o.Tabelona;

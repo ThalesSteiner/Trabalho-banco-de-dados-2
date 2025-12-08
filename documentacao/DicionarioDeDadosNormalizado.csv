@@ -63,8 +63,6 @@ bountyLevel;int;Nível de recompensa atual do campeão (bounty);0–29
 totalDamageDealtToChampions;int;Dano total causado a campeões;≥ 0
 physicalDamageDealtToChampions;int;Dano físico causado a campeões;≥ 0
 physicalDamageTaken;int;Dano físico recebido;≥ 0
-magicDamageDealtToChampions;int;Dano mágico causado a campeões;≥ 0
-magicDamageTaken;int;Dano mágico recebido;≥ 0
 trueDamageDealtToChampions;int;True damage causado a campeões;≥ 0
 trueDamageTaken;int;True damage recebido;≥ 0
 totalDamageTaken;int;Total de dano recebido;≥ 0

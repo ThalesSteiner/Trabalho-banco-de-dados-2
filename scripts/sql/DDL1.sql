@@ -84,7 +84,6 @@ CREATE TABLE n.Stats_Jogador (
     totalTimeSpentDead INT,
 
     longestTimeSpentLiving INT,
-    magicDamageTaken INT,
     timeCCingOthers INT,
     totalDamageShieldedOnTeammates INT,
     physicalDamageTaken INT,

@@ -84,6 +84,7 @@ CREATE TABLE n.Stats_Jogador (
     totalTimeSpentDead INT,
 
     longestTimeSpentLiving INT,
+    magicDamageTaken INT,
     
     PRIMARY KEY (GameID, summonerId),
     FOREIGN KEY (GameID, summonerId) REFERENCES n.Participacao(GameID, summonerId)

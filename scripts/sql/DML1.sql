@@ -51,7 +51,10 @@ INSERT INTO n.Stats_Jogador (
     totalDamageDealtToChampions, physicalDamageDealtToChampions, magicDamageDealtToChampions, trueDamageDealtToChampions, 
     totalDamageTaken, damageSelfMitigated, visionScore, wardsPlaced, wardsKilled, 
     turretTakedowns, inhibitorKills, dragonKills, baronKills, 
-    goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead
+    goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead, 
+    
+    longestTimeSpentLiving , magicDamageTaken ,timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
+    trueDamageTaken , totalHeal,totalHealsOnTeammates, damageDealtToObjectives,visionWardsBoughtInGame , objectivesStolen ,totalTimeCCDealt
 )
 SELECT 
     GameID, summonerId, kills, deaths, assists, 
@@ -59,5 +62,9 @@ SELECT
     totalDamageDealtToChampions, physicalDamageDealtToChampions, magicDamageDealtToChampions, trueDamageDealtToChampions, 
     totalDamageTaken, damageSelfMitigated, visionScore, wardsPlaced, wardsKilled, 
     turretTakedowns, inhibitorKills, dragonKills, baronKills, 
-    goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead
+    goldEarned, goldSpent, totalMinionsKilled, totalTimeSpentDead ,
+
+     longestTimeSpentLiving , magicDamageTaken ,timeCCingOthers ,totalDamageShieldedOnTeammates,physicalDamageTaken ,magicDamageTaken , 
+    trueDamageTaken , totalHeal,totalHealsOnTeammates, damageDealtToObjectives,visionWardsBoughtInGame , objectivesStolen ,totalTimeCCDealt
+    
 FROM o.Tabelona;

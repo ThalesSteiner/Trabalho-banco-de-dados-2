@@ -22,3 +22,26 @@ CREATE TRIGGER trg_impedir_baron_prematuro
 BEFORE INSERT OR UPDATE ON n.Stats_Jogador
 FOR EACH ROW
 EXECUTE FUNCTION n.fn_validar_tempo_baron();
+
+
+/* TRIGGER que verifica se o insert em jogadoritem em experiencia é maior que o máximo,
+se for, o usuário está trapaceado
+por Daniel da Costa */
+CREATE OR REPLACE FUNCTION n.verfexperiencia()
+RETURNS TRIGGER AS $$
+begin
+    if new.champExperience > 43518 then
+      raise exception 'Jogador possui mais experiencia que o limite, ele está trapaceado';
+      return old;
+    else
+      return new;
+    end if;
+
+end;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER verificarsepodeExperiencia
+BEFORE INSERT ON n.JogadorItem
+FOR EACH ROW
+EXECUTE FUNCTION n.verfexperiencia();
+

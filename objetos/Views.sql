@@ -17,3 +17,15 @@ GROUP BY
 HAVING 
     COUNT(p.GameID) > 5
 ORDER BY 
+
+
+/* View que demonstra os campeões mais dificeis/chatos de se jogar contra (vitorias por desistência)
+por Daniel da Costa */
+
+create or replace view n.campeoeschatos as 
+select championName as "Campeão", count (championName) as "vitórias por desistência" from n.Time
+INNER join n.Participacao on n.Participacao.GameID = n.Time.GameID 
+INNER join n.Campeao on n.Participacao.championId = n.Campeao.championId 
+WHERE gameEndedInSurrender = TRUE and win = TRUE
+group by championName
+order by count(championName) desc;

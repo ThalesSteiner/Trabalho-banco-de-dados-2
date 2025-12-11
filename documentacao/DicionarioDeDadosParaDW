@@ -2,10 +2,20 @@
 
 NOME // TIPO // RESTRIÇÕES // DESCRIÇÃO
 
+DIMENSÃO TEMPO:
+tempoPK; INT; PK ; Quanto tempo durou a partida
+faixaDuracao; VARCHAR; - ; Resumo se a partida foi curta, média ou longa
+minutos; INT; - ; Quantos minutos durou
+
 DIMENSÃO PARTIDA:
 partidaPK; SERIAL; PK; Chave da dimensão partida
+tempoPK; INT ; PK E FK ; Foreign key da dimensão tempo
 GameID; VARCHAR(50); NOT NULL e UNIQUE; ID da partida
 GameMode; VARCHAR(10); IN ('ARAM','CLASSIC') ; modo de jogo da partida
+teamId; INT ; IN 100,200 ; Se o time é o 100 ou o 200 (lado)
+win; BOOLEAN ; - ; Se ganhou a partida
+teamEarlySurrendered; BOOLEAN; - ; Se o time desisitu cedo
+gameEndedInSurrender; BOOLEAN; - ; Se o jogo terminou com desistência 
 
 DIMENSÃO CONTAJOGADOR:
 contajogadorPK; SERIAL; PK; Chave da dimensão contajogador
@@ -16,62 +26,23 @@ campeaoPK; SERIAL; PK; Chave da dimensão campeão
 championID; INT; NOT NULL; Id do campeão (personagem)
 championName; VARCHAR(50); NOT NULL e UNIQUE; nome do personagem
 
-FATO PARTIDAJOGADOR:
+FATO PERFORMANCE:
+IDfato; SERIAL ; PK ; ID de cada fato
 fatoJogadorPK; SERIAL ; PK ; Chave da Fato partidajogador
 campeaoFK; INT ; FK e NOT NULL; Foreign key da dimensão campeão
 contajogadorFK; INT; FK; Foreign key da dimensão contajogador
-
-individualPosition; VARCHAR(7);  CHECK (individualPosition IN ('TOP','MIDDLE','BOTTOM','JUNGLE','UTILITY','Invalid')); qual a posição individual real do jogador no jogo
-lane; VARCHAR(6);  CHECK (lane IN ('TOP','MIDDLE','BOTTOM','JUNGLE','NONE')); qual a posição declarada pelo jogador no inicio
-kills; INT; quantos jogadores o jogador derrotou; - ; -
+kills; INT; qntos jogadores o jogador derrouatou; - ; -
 deaths; INT; quantas vezes o jogador foi derrotado; - ; -
 assists; INT; quantos jogadores o jogador assistiu na derrota; - ; -
 largestCriticalStrike;int;Maior crítico causado;≥ 0
-largestKillingSpree;int;Maior sequência viva com kills;≥ 0
-longestTimeSpentLiving;int;Maior tempo vivo (segundos);≥ 0
-magicDamageDealtToChampions;int;Dano mágico causado a campeões;≥ 0
-magicDamageTaken;int;Dano mágico recebido;≥ 0
-timeCCingOthers;int;Tempo de controle de grupo aplicado em inimigos;≥ 0
-firstBloodAssist;bool;Assistiu o First Blood;true/false
-firstBloodKill;bool;Realizou o First Blood;true/false
-bountyLevel;int;Nível de recompensa atual do campeão (bounty);0–29
-totalDamageDealtToChampions;int;Dano total causado a campeões;≥ 0
-physicalDamageDealtToChampions;int;Dano físico causado a campeões;≥ 0
-physicalDamageTaken;int;Dano físico recebido;≥ 0
-trueDamageDealtToChampions;int;True damage causado a campeões;≥ 0
-trueDamageTaken;int;True damage recebido;≥ 0
-totalDamageTaken;int;Total de dano recebido;≥ 0
-totalHeal;int;Total de cura aplicada;≥ 0
-totalHealsOnTeammates;int;Cura aplicada aos aliados;≥ 0
-totalMinionsKilled;int;Minions abatidos;≥ 0
-totalTimeSpentDead;int;Tempo total morto;≥ 0
-damageSelfMitigated;int;Dano mitigado via armadura/escudo;≥ 0
-damageDealtToObjectives;int;Dano causado a objetivos;≥ 0
-visionScore;int;Pontos totais de visão gerados;≥ 0
-visionWardsBoughtInGame;int;Wards de controle comprados;≥ 0
-wardsKilled;int;Wards destruídas;≥ 0
-wardsPlaced;int;Wards colocadas;≥ 0
-turretTakedowns;int;Torres destruídas com participação;≥ 0
-inhibitorKills;int;Inibidores destruídos;0–7
-dragonKills;int;Dragões abatidos com participação;0–4
-baronKills;int;Quantidade de barões abatidos com participação do jogador;0–3
 goldEarned;int;Ouro total obtido;≥ 0
 goldSpent;int;Ouro total gasto;≥ 0 
-objectivesStolen;int;Objetivos roubados (ex: dragão/barão);0–3
+totalMinionsKilled;int;Minions abatidos;≥ 0
+totalTimeSpentDead;int;Tempo total morto;≥ 0
+totalDamageDealtToChampions;int;Dano total causado a campeões;≥ 0
+visionScore;int;Pontos totais de visão gerados;≥ 0
+totalDamageTaken;int;Total de dano recebido;≥ 0
+wardsPlaced;int;Wards colocadas;≥ 0
 totalTimeCCDealt;int;Total de tempo de CC aplicado;≥ 0
-
-
-FATO PARTIDATIME:
-fatoPartidaPK; SERIAL ; PK ; Chave da Fato partidatime
-partidaFK; INT; FK; Foreign key da dimensão partida
-
-teamId; INT ; IN 100,200 ; Se o time é o 100 ou o 200 (lado)
-win; BOOLEAN ; - ; Se ganhou a partida
-teamEarlySurrendered; BOOLEAN; - ; Se o time desisitu cedo
-gameEndedInSurrender; BOOLEAN; - ; Se o jogo terminou com desistência
-nexusLost; INT; IN 0,1 ; nexus perdidos (0 ou 1)
-inhibitorsLost; INT; BETWEEN 0 AND 10 ; inibidores perdidos pelo time
-turretsLost; INT; - ; torretas perdidas pelo time
-timePlayed; INT ; - ; tempo jogado em segundos ou duração da partida
-
-
+damageSelfMitigated;int;Dano mitigado via armadura/escudo;≥ 0
+damageDealtToObjectives;int;Dano causado a objetivos;≥ 0

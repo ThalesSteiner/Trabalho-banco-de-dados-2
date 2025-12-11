@@ -45,3 +45,21 @@ BEFORE INSERT ON n.JogadorItem
 FOR EACH ROW
 EXECUTE FUNCTION n.verfexperiencia();
 
+
+/* TRIGGER para validar se aconteceu remake na partida ou não (partidas com menos de 230 segundos não são válidas)
+por Iuri Sajnin */
+CREATE OR REPLACE FUNCTION n.trg_Validar_Tempo_Jogo()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.timePlayed < 230 THEN
+        RAISE EXCEPTION 'Erro de Inserção: Partidas que aconteceu o remake não são permitidas para análise.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_Check_Remake
+BEFORE INSERT ON n.Partida
+FOR EACH ROW
+EXECUTE FUNCTION n.trg_Validar_Tempo_Jogo();

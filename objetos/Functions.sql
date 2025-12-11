@@ -35,3 +35,46 @@ begin
     end if;
 end;
 $$ LANGUAGE plpgsql;
+
+
+/*function que analisa o desempenho de um jogador em uma partida baseado no KDA e retorna uma classificação 
+por Iuri Sajnin */
+
+CREATE OR REPLACE FUNCTION n.fn_Classificar_Performance(p_GameID VARCHAR, p_SummonerID VARCHAR)
+RETURNS VARCHAR AS $$
+DECLARE
+    v_kills INT;
+    v_deaths INT;
+    v_assists INT;
+    v_kda NUMERIC;
+    v_resultado VARCHAR(50);
+BEGIN
+    SELECT kills, deaths, assists 
+    INTO v_kills, v_deaths, v_assists
+    FROM n.Stats_Jogador
+    WHERE GameID = p_GameID AND summonerId = p_SummonerID;
+    IF v_kills IS NULL THEN
+        RETURN 'Jogador ou Partida não encontrados';
+    END IF;
+    IF v_deaths = 0 THEN
+        v_kda := (v_kills + v_assists); 
+        v_resultado := 'PERFECT KDA (Imortal)';
+    ELSE
+        v_kda := (v_kills + v_assists)::NUMERIC / v_deaths;
+        IF v_kda >= 10 THEN
+            v_resultado := 'Rank S+ (Lendário)';
+        ELSIF v_kda >= 5 THEN
+            v_resultado := 'Rank A (Carregou a partida)';
+        ELSIF v_kda >= 3 THEN
+            v_resultado := 'Rank B (Bom)';
+        ELSIF v_kda >= 1.5 THEN
+            v_resultado := 'Rank C (Na Média)';
+        ELSIF v_kda >= 0.5 THEN
+             v_resultado := 'Rank D (Quase trollou...)';
+        ELSE
+             v_resultado := 'Rank F (Feedou?)';
+        END IF;
+    END IF;
+    RETURN v_resultado;
+END;
+$$ LANGUAGE plpgsql;

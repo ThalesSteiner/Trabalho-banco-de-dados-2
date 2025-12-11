@@ -48,4 +48,49 @@ JOIN dw.dim_FaixaTempo dt ON dt.sk_tempo = (
 INSERT INTO dw.fato_Performance (
     sk_campeao, 
     sk_jogador, 
-    sk_detalhes,  
+    sk_detalhes,
+    qtd_kills, 
+    qtd_deaths, 
+    qtd_assists, 
+    kda_ratio, 
+    ouro_ganho, 
+    ouro_gasto, 
+    minions_abatidos, 
+    dano_total_campeoes, 
+    dano_objetivos, 
+    dano_recebido, 
+    dano_mitigado, 
+    placar_visao, 
+    wards_colocadas, 
+    tempo_cc_aplicado
+)
+SELECT
+    dc.sk_campeao,
+    dj.sk_jogador,
+    dd.sk_detalhes,
+    s.kills,
+    s.deaths,
+    s.assists,
+    CASE 
+        WHEN s.deaths = 0 THEN (s.kills + s.assists)::NUMERIC 
+        ELSE ROUND((s.kills + s.assists)::NUMERIC / s.deaths, 2) 
+    END,
+    s.goldEarned,
+    s.goldSpent,
+    s.totalMinionsKilled,
+    s.totalDamageDealtToChampions,
+    s.damageDealtToObjectives,
+    s.totalDamageTaken,
+    s.damageSelfMitigated,
+    s.visionScore,
+    s.wardsPlaced,
+    s.totalTimeCCDealt
+
+FROM n.Participacao p
+JOIN n.Stats_Jogador s ON p.GameID = s.GameID AND p.summonerId = s.summonerId
+JOIN n.Partida part ON p.GameID = part.GameID
+JOIN n.Campeao camp ON p.championID = camp.championID
+JOIN dw.dim_Campeao dc ON camp.championName = dc.championName
+JOIN dw.dim_Jogador dj ON p.summonerId = dj.summonerId
+JOIN dw.dim_DetalhesPartida dd ON p.GameID = dd.GameID 
+    AND (CASE WHEN p.teamId = 100 THEN 'Azul' ELSE 'Vermelho' END) = dd.lado_time;  

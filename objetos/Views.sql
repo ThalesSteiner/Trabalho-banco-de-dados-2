@@ -29,3 +29,21 @@ INNER join n.Campeao on n.Participacao.championId = n.Campeao.championId
 WHERE gameEndedInSurrender = TRUE and win = TRUE
 group by championName
 order by count(championName) desc;
+
+/* View para facilitar a consulta mostrando um placar detalhado dos jogadores
+por Iuri Sajnin */
+
+CREATE OR REPLACE VIEW n.vw_Placar_Detalhado AS
+SELECT 
+    p.GameID,
+    t.win AS Vitoria,
+    c.championName AS Campeao,
+    p.individualPosition AS Rota,
+    s.kills,
+    s.deaths,
+    s.assists,
+    s.totalDamageDealtToChampions AS Dano_Em_Campeoes 
+FROM n.Participacao p
+JOIN n.Stats_Jogador s ON p.GameID = s.GameID AND p.summonerId = s.summonerId
+JOIN n.Campeao c ON p.championID = c.championID
+JOIN n.Time t ON p.GameID = t.GameID AND p.teamId = t.teamId;

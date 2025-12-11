@@ -1,1 +1,124 @@
 //documento dbdiagram
+Table ContaJogador {
+  summonerId varchar [pk]
+}
+
+Table Campeao {
+  championID int [pk, increment]
+  championName varchar
+}
+
+Table Partida {
+  GameID varchar [pk]
+  GameMode varchar
+  timePlayed int
+}
+
+Table Time {
+  GameID varchar
+  teamId int
+  win boolean
+  teamEarlySurrendered boolean
+  gameEndedInSurrender boolean
+  nexusLost int
+  inhibitorsLost int
+  turretsLost int
+
+  indexes {
+    (GameID, teamId) [pk]
+  }
+}
+
+Table Participacao {
+  GameID varchar
+  summonerId varchar
+  championID int
+  teamId int
+  individualPosition varchar
+  lane varchar
+
+  indexes {
+    (GameID, summonerId) [pk]
+  }
+}
+
+Table JogadorItem {
+  GameID varchar
+  summonerId varchar
+  champLevel int
+  champExperience int
+  item0 int
+  item1 int
+  item2 int
+  item3 int
+  item4 int
+  item5 int
+  item6 int
+  summoner1Id int
+  summoner2Id int
+  summoner1Casts int
+  summoner2Casts int
+  spell1Casts int
+  spell2Casts int
+  spell3Casts int
+  spell4Casts int
+
+  indexes {
+    (GameID, summonerId) [pk]
+  }
+}
+
+Table Stats_Jogador {
+  GameID varchar
+  summonerId varchar
+  kills int
+  deaths int
+  assists int
+  largestKillingSpree int
+  largestCriticalStrike int
+  firstBloodKill boolean
+  firstBloodAssist boolean
+  bountyLevel int
+  totalDamageDealtToChampions int
+  physicalDamageDealtToChampions int
+  magicDamageDealtToChampions int
+  trueDamageDealtToChampions int
+  totalDamageTaken int
+  damageSelfMitigated int
+  visionScore int
+  wardsPlaced int
+  wardsKilled int
+  turretTakedowns int
+  inhibitorKills int
+  dragonKills int
+  baronKills int
+  goldEarned int
+  goldSpent int
+  totalMinionsKilled int
+  totalTimeSpentDead int
+  longestTimeSpentLiving int
+  timeCCingOthers int
+  totalDamageShieldedOnTeammates int
+  physicalDamageTaken int
+  magicDamageTaken int
+  trueDamageTaken int
+  totalHeal int
+  totalHealsOnTeammates int
+  damageDealtToObjectives int
+  visionWardsBoughtInGame int
+  objectivesStolen int
+  totalTimeCCDealt int
+
+  indexes {
+    (GameID, summonerId) [pk]
+  }
+}
+Ref: Time.GameID > Partida.GameID
+
+Ref: Participacao.(GameID, teamId) > Time.(GameID, teamId)
+Ref: Participacao.summonerId > ContaJogador.summonerId
+Ref: Participacao.championID > Campeao.championID
+
+Ref: JogadorItem.(GameID, summonerId) > Participacao.(GameID, summonerId)
+
+Ref: Stats_Jogador.(GameID, summonerId) > Participacao.(GameID, summonerId)

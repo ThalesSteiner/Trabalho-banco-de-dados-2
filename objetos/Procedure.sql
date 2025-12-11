@@ -76,3 +76,49 @@ begin
   where GameID = p_GameID and summonerId = p_summonerID;
 end;
 $$ LANGUAGE plpgsql;
+
+
+/*Procedure para verificar se a partida foi balanceada ou não
+por Iuri Sajnin */
+CREATE OR REPLACE PROCEDURE n.sp_Verificar_Partida(p_GameID VARCHAR)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_gold_blue  INT;
+    v_gold_red   INT;
+    v_kills_blue INT;
+    v_kills_red  INT;
+    v_diff_gold_perc NUMERIC;
+    v_total_kills INT;
+    v_veredito VARCHAR(100);
+BEGIN
+    SELECT 
+        SUM(CASE WHEN p.teamId = 100 THEN s.goldEarned ELSE 0 END),
+        SUM(CASE WHEN p.teamId = 200 THEN s.goldEarned ELSE 0 END),
+        SUM(CASE WHEN p.teamId = 100 THEN s.kills ELSE 0 END),
+        SUM(CASE WHEN p.teamId = 200 THEN s.kills ELSE 0 END)
+    INTO v_gold_blue, v_gold_red, v_kills_blue, v_kills_red
+    FROM n.Stats_Jogador s
+    JOIN n.Participacao p ON s.GameID = p.GameID AND s.summonerId = p.summonerId
+    WHERE s.GameID = p_GameID;
+    IF v_gold_blue IS NULL THEN
+        RAISE NOTICE 'Partida % não encontrada', p_GameID;
+        RETURN;
+    END IF;
+    v_diff_gold_perc := ABS(v_gold_blue - v_gold_red)::NUMERIC / NULLIF((v_gold_blue + v_gold_red), 0) * 100;
+    v_total_kills := v_kills_blue + v_kills_red;
+    IF v_diff_gold_perc < 5 THEN
+        v_veredito := 'Partida Equilibrada (Diferença de ouro < 5%)';
+    ELSIF v_diff_gold_perc > 20 THEN
+        v_veredito := 'ATROPELO! (Um time stompou o outro)';
+    ELSIF v_total_kills > 80 THEN
+        v_veredito := 'Jogo de "bronze" (Muitas mortes)';
+    ELSE
+        v_veredito := 'Jogo Competitivo (Vantagem moderada)';
+    END IF;
+    RAISE NOTICE 'AUDITORIA DA PARTIDA: %', p_GameID;
+    RAISE NOTICE 'Ouro Time Azul (100): % | Kills: %', v_gold_blue, v_kills_blue;
+    RAISE NOTICE 'Ouro Time Vermelho (200): % | Kills: %', v_gold_red, v_kills_red;
+    RAISE NOTICE 'VEREDITO FINAL: %', v_veredito;
+END;
+$$;;

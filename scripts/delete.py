@@ -30,7 +30,7 @@ def confirm_deletion() -> bool:
     logger.warning("=" * 60)
     logger.warning("LIMPEZA DO BANCO DE DADOS")
     logger.warning("ATENCAO: Esta operacao vai deletar TODAS as tabelas e schemas!")
-    logger.warning("Schemas que serao deletados: 'o' (tabela o.Tabelona), 'n' (todas as tabelas normalizadas)")
+    logger.warning("Schemas que serao deletados: 'o' (tabela o.Tabelona), 'n' (todas as tabelas normalizadas), 'dw' (Data Warehouse)")
     logger.warning("Esta operacao NAO pode ser desfeita!")
 
     while True:
@@ -103,15 +103,46 @@ def delete_original_tables() -> bool:
         conn.close()
 
 
+def delete_dw_tables() -> bool:
+    """
+    Deleta todas as tabelas do schema dw na ordem correta (respeitando foreign keys).
+    """
+    conn = db_config.get_connection()
+    if not conn:
+        logger.error("Erro ao conectar ao banco de dados")
+        return False
+
+    try:
+        with conn.cursor() as cursor:
+            tables_to_delete = [
+                "dw.fato_Performance",
+                "dw.dim_DetalhesPartida",
+                "dw.dim_FaixaTempo",
+                "dw.dim_Jogador",
+                "dw.dim_Campeao",
+            ]
+            for table in tables_to_delete:
+                cursor.execute(f"DROP TABLE IF EXISTS {table} CASCADE;")
+        conn.commit()
+        logger.info("Tabelas do schema dw deletadas")
+        return True
+    except Exception as e:
+        conn.rollback()
+        logger.error(f"Erro ao deletar tabelas do Data Warehouse: {e}")
+        return False
+    finally:
+        conn.close()
+
+
 def delete_schemas() -> bool:
-    """Deleta os schemas o e n."""
+    """Deleta os schemas o, n e dw."""
     conn = db_config.get_connection()
     if not conn:
         logger.error("Erro ao conectar ao banco de dados")
         return False
     try:
         with conn.cursor() as cursor:
-            for schema in ["n", "o"]:
+            for schema in ["dw", "n", "o"]:
                 cursor.execute(f"DROP SCHEMA IF EXISTS {schema} CASCADE;")
         conn.commit()
         logger.info("Schemas deletados")
@@ -137,6 +168,8 @@ def main():
     logger.info("Iniciando deleção...")
 
     success = True
+    if not delete_dw_tables():
+        success = False
     if not delete_normalized_tables():
         success = False
     if not delete_original_tables():

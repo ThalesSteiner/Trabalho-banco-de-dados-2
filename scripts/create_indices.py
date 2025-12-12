@@ -1,8 +1,10 @@
 """
 Script para criar índices nas tabelas do banco de dados.
+Lê e executa o arquivo SQL de índices da pasta objetos.
 Melhora a performance de consultas e joins.
 Execute: python scripts/create_indices.py
 """
+import os
 import sys
 from pathlib import Path
 
@@ -22,96 +24,52 @@ def check_database_connection() -> bool:
         return False
 
 
-def create_original_table_indices() -> bool:
+def create_indices_from_file(indices_path: str) -> bool:
     """
-    Cria índices para a tabela original o.Tabelona.
+    Cria índices a partir de um arquivo SQL.
     """
     conn = db_config.get_connection()
     if not conn:
         logger.error("Erro ao conectar ao banco de dados")
         return False
 
-    indices = [
-        ("idx_tabelona_gameid", "CREATE INDEX IF NOT EXISTS idx_tabelona_gameid ON o.Tabelona(GameID);"),
-        ("idx_tabelona_summonerid", "CREATE INDEX IF NOT EXISTS idx_tabelona_summonerid ON o.Tabelona(summonerId);"),
-        ("idx_tabelona_championname", "CREATE INDEX IF NOT EXISTS idx_tabelona_championname ON o.Tabelona(championName);"),
-        ("idx_tabelona_gamemode", "CREATE INDEX IF NOT EXISTS idx_tabelona_gamemode ON o.Tabelona(GameMode);"),
-        ("idx_tabelona_win", "CREATE INDEX IF NOT EXISTS idx_tabelona_win ON o.Tabelona(win);"),
-        ("idx_tabelona_teamid", "CREATE INDEX IF NOT EXISTS idx_tabelona_teamid ON o.Tabelona(teamId);"),
-        ("idx_tabelona_position", "CREATE INDEX IF NOT EXISTS idx_tabelona_position ON o.Tabelona(individualPosition);"),
-        ("idx_tabelona_lane", "CREATE INDEX IF NOT EXISTS idx_tabelona_lane ON o.Tabelona(lane);"),
-    ]
-
     try:
-        with conn.cursor() as cursor:
-            for index_name, index_sql in indices:
-                try:
-                    cursor.execute(index_sql)
-                    logger.info(f"Índice {index_name} criado")
-                except Exception as e:
-                    logger.warning(f"Erro ao criar índice {index_name}: {e}")
+        indices_file_path = Path(indices_path)
+        if not indices_file_path.exists():
+            raise FileNotFoundError(f"Arquivo de índices não encontrado em {indices_file_path}")
 
+        with open(indices_file_path, "r", encoding="utf-8") as indices_file:
+            indices_sql = indices_file.read()
+
+        with conn.cursor() as cursor:
+            db_config.execute_multiple_statements(indices_sql, cursor)
         conn.commit()
-        logger.info("Índices da tabela o.Tabelona criados")
+        logger.info("Índices criados com sucesso")
         return True
     except Exception as e:
         conn.rollback()
-        logger.error(f"Erro ao criar índices da tabela original: {e}")
+        logger.error(f"Erro ao criar índices: {e}")
         return False
     finally:
         conn.close()
+
+
+def create_original_table_indices() -> bool:
+    """
+    Cria índices para a tabela original o.Tabelona.
+    Mantido para compatibilidade com código existente.
+    """
+    indices_path = os.path.join("objetos", "Indices.sql")
+    return create_indices_from_file(indices_path)
 
 
 def create_normalized_table_indices() -> bool:
     """
     Cria índices para as tabelas normalizadas (schema n).
+    Mantido para compatibilidade com código existente.
     """
-    conn = db_config.get_connection()
-    if not conn:
-        logger.error("Erro ao conectar ao banco de dados")
-        return False
-
-    indices = [
-        # n.Partida
-        ("idx_partida_gamemode", "CREATE INDEX IF NOT EXISTS idx_partida_gamemode ON n.Partida(GameMode);"),
-        
-        # n.Time
-        ("idx_time_gameid", "CREATE INDEX IF NOT EXISTS idx_time_gameid ON n.Time(GameID);"),
-        ("idx_time_win", "CREATE INDEX IF NOT EXISTS idx_time_win ON n.Time(win);"),
-        
-        # n.Participacao
-        ("idx_participacao_championid", "CREATE INDEX IF NOT EXISTS idx_participacao_championid ON n.Participacao(championID);"),
-        ("idx_participacao_summonerid", "CREATE INDEX IF NOT EXISTS idx_participacao_summonerid ON n.Participacao(summonerId);"),
-        ("idx_participacao_position", "CREATE INDEX IF NOT EXISTS idx_participacao_position ON n.Participacao(individualPosition);"),
-        ("idx_participacao_lane", "CREATE INDEX IF NOT EXISTS idx_participacao_lane ON n.Participacao(lane);"),
-        ("idx_participacao_teamid", "CREATE INDEX IF NOT EXISTS idx_participacao_teamid ON n.Participacao(teamId);"),
-        
-        # n.Stats_Jogador
-        ("idx_stats_kills", "CREATE INDEX IF NOT EXISTS idx_stats_kills ON n.Stats_Jogador(kills);"),
-        ("idx_stats_deaths", "CREATE INDEX IF NOT EXISTS idx_stats_deaths ON n.Stats_Jogador(deaths);"),
-        ("idx_stats_goldearned", "CREATE INDEX IF NOT EXISTS idx_stats_goldearned ON n.Stats_Jogador(goldEarned);"),
-        ("idx_stats_damage", "CREATE INDEX IF NOT EXISTS idx_stats_damage ON n.Stats_Jogador(totalDamageDealtToChampions);"),
-        ("idx_stats_visionscore", "CREATE INDEX IF NOT EXISTS idx_stats_visionscore ON n.Stats_Jogador(visionScore);"),
-    ]
-
-    try:
-        with conn.cursor() as cursor:
-            for index_name, index_sql in indices:
-                try:
-                    cursor.execute(index_sql)
-                    logger.info(f"Índice {index_name} criado")
-                except Exception as e:
-                    logger.warning(f"Erro ao criar índice {index_name}: {e}")
-
-        conn.commit()
-        logger.info("Índices das tabelas normalizadas criados")
-        return True
-    except Exception as e:
-        conn.rollback()
-        logger.error(f"Erro ao criar índices das tabelas normalizadas: {e}")
-        return False
-    finally:
-        conn.close()
+    indices_path = os.path.join("objetos", "Indices.sql")
+    return create_indices_from_file(indices_path)
 
 
 def main():

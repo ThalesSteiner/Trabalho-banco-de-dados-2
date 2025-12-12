@@ -103,7 +103,8 @@ def create_main_table(ddl_path: str) -> bool:
             ddl_sql = ddl_file.read()
 
         with conn.cursor() as cursor:
-            cursor.execute(ddl_sql)
+            db_config.execute_multiple_statements(ddl_sql, cursor)
+        
         conn.commit()
         logger.info("Tabela o.Tabelona criada com sucesso")
         return True
@@ -187,8 +188,8 @@ def main():
     )
     parser.add_argument(
         "--ddl-path",
-        default=os.path.join("scripts", "sql", "ScriptTabelaOriginal.sql"),
-        help="Caminho do DDL .sql da Tabelona (default: scripts/sql/ScriptTabelaOriginal.sql)",
+        default=os.path.join("scripts", "CSV 1 - 1000 partidas", "ScriptTabelaOriginal.sql"),
+        help="Caminho do DDL .sql da Tabelona (default: scripts/CSV 1 - 1000 partidas/ScriptTabelaOriginal.sql)",
     )
     parser.add_argument(
         "--csv",

@@ -1,5 +1,5 @@
 """
-Cria as tabelas normalizadas (schema n) e popula a partir de o.Tabelona.
+Cria as tabelas do Data Warehouse (schema dw) e popula a partir das tabelas normalizadas (schema n).
 Use as variáveis de ambiente DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME.
 """
 import argparse
@@ -11,9 +11,9 @@ from loguru import logger
 import utils.database_config as db_config
 
 
-def create_normalized_tables(ddl_path: str) -> bool:
+def create_dw_tables(ddl_path: str) -> bool:
     """
-    Cria o schema n e as tabelas normalizadas conforme o arquivo SQL fornecido.
+    Cria o schema dw e as tabelas do Data Warehouse conforme o arquivo SQL fornecido.
     """
     conn = db_config.get_connection()
     if not conn:
@@ -31,19 +31,19 @@ def create_normalized_tables(ddl_path: str) -> bool:
         with conn.cursor() as cursor:
             db_config.execute_multiple_statements(ddl_sql, cursor)
         conn.commit()
-        logger.info("Tabelas normalizadas criadas com sucesso")
+        logger.info("Tabelas do Data Warehouse criadas com sucesso")
         return True
     except Exception as e:
         conn.rollback()
-        logger.error(f"Erro ao criar tabelas normalizadas: {e}")
+        logger.error(f"Erro ao criar tabelas do Data Warehouse: {e}")
         return False
     finally:
         conn.close()
 
 
-def populate_normalized_tables(dml_path: str) -> bool:
+def populate_dw_tables(dml_path: str) -> bool:
     """
-    Popula as tabelas normalizadas a partir de o.Tabelona usando o arquivo DML fornecido.
+    Popula as tabelas do Data Warehouse a partir das tabelas normalizadas usando o arquivo DML fornecido.
     """
     conn = db_config.get_connection()
     if not conn:
@@ -61,11 +61,11 @@ def populate_normalized_tables(dml_path: str) -> bool:
         with conn.cursor() as cursor:
             db_config.execute_multiple_statements(dml_sql, cursor)
         conn.commit()
-        logger.info("Tabelas normalizadas populadas com sucesso")
+        logger.info("Tabelas do Data Warehouse populadas com sucesso")
         return True
     except Exception as e:
         conn.rollback()
-        logger.error(f"Erro ao popular tabelas normalizadas: {e}")
+        logger.error(f"Erro ao popular tabelas do Data Warehouse: {e}")
         return False
     finally:
         conn.close()
@@ -73,17 +73,17 @@ def populate_normalized_tables(dml_path: str) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Cria o schema n e popula as tabelas normalizadas a partir de o.Tabelona."
+        description="Cria o schema dw e popula as tabelas do Data Warehouse a partir das tabelas normalizadas."
     )
     parser.add_argument(
         "--ddl-path",
-        default=os.path.join("scripts", "CSV 1 - 1000 partidas", "DDL1.sql"),
-        help="Caminho do DDL .sql das tabelas normalizadas (default: scripts/CSV 1 - 1000 partidas/DDL1.sql)",
+        default=os.path.join("DW", "DDL.sql"),
+        help="Caminho do DDL .sql das tabelas do Data Warehouse (default: DW/DDL.sql)",
     )
     parser.add_argument(
         "--dml-path",
-        default=os.path.join("scripts", "CSV 1 - 1000 partidas", "DML1.sql"),
-        help="Caminho do DML .sql para popular as tabelas (default: scripts/CSV 1 - 1000 partidas/DML1.sql)",
+        default=os.path.join("DW", "DML.sql"),
+        help="Caminho do DML .sql para popular as tabelas (default: DW/DML.sql)",
     )
     parser.add_argument(
         "--create-only",
@@ -92,11 +92,11 @@ def main():
     )
     args = parser.parse_args()
 
-    created = create_normalized_tables(args.ddl_path)
+    created = create_dw_tables(args.ddl_path)
     if not created or args.create_only:
         return
 
-    populate_normalized_tables(args.dml_path)
+    populate_dw_tables(args.dml_path)
 
 
 if __name__ == "__main__":

@@ -121,4 +121,73 @@ BEGIN
     RAISE NOTICE 'Ouro Time Vermelho (200): % | Kills: %', v_gold_red, v_kills_red;
     RAISE NOTICE 'VEREDITO FINAL: %', v_veredito;
 END;
-$$;;
+$$;
+
+
+/* Procedure para exibir estatísticas resumidas de um jogador
+   Mostra total de partidas, vitórias, derrotas, KDA médio e outras métricas
+   Feito por Thales Steiner */
+CREATE OR REPLACE PROCEDURE n.sp_Estatisticas_Jogador(p_SummonerID VARCHAR)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_total_partidas INT;
+    v_total_vitorias INT;
+    v_total_derrotas INT;
+    v_taxa_vitoria NUMERIC;
+    v_kda_medio NUMERIC;
+    v_kills_total INT;
+    v_deaths_total INT;
+    v_assists_total INT;
+    v_ouro_medio NUMERIC;
+    v_dano_medio NUMERIC;
+    v_visao_media NUMERIC;
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM n.ContaJogador WHERE summonerId = p_SummonerID) THEN
+        RAISE NOTICE 'Jogador % não encontrado no banco de dados.', p_SummonerID;
+        RETURN;
+    END IF;
+    SELECT 
+        COUNT(DISTINCT p.GameID),
+        SUM(CASE WHEN t.win = TRUE THEN 1 ELSE 0 END),
+        SUM(CASE WHEN t.win = FALSE THEN 1 ELSE 0 END)
+    INTO v_total_partidas, v_total_vitorias, v_total_derrotas
+    FROM n.Participacao p
+    JOIN n.Time t ON p.GameID = t.GameID AND p.teamId = t.teamId
+    WHERE p.summonerId = p_SummonerID;
+    
+    IF v_total_partidas = 0 THEN
+        RAISE NOTICE 'Jogador % não possui partidas registradas.', p_SummonerID;
+        RETURN;
+    END IF;
+    v_taxa_vitoria := ROUND((v_total_vitorias::NUMERIC / v_total_partidas) * 100, 2);
+    SELECT 
+        ROUND(AVG(CASE WHEN s.deaths = 0 THEN (s.kills + s.assists)::NUMERIC 
+                       ELSE (s.kills + s.assists)::NUMERIC / NULLIF(s.deaths, 0) END), 2),
+        SUM(s.kills),
+        SUM(s.deaths),
+        SUM(s.assists),
+        ROUND(AVG(s.goldEarned), 0),
+        ROUND(AVG(s.totalDamageDealtToChampions), 0),
+        ROUND(AVG(s.visionScore), 2)
+    INTO v_kda_medio, v_kills_total, v_deaths_total, v_assists_total, 
+         v_ouro_medio, v_dano_medio, v_visao_media
+    FROM n.Stats_Jogador s
+    JOIN n.Participacao p ON s.GameID = p.GameID AND s.summonerId = p.summonerId
+    WHERE s.summonerId = p_SummonerID;
+    RAISE NOTICE '========================================';
+    RAISE NOTICE 'ESTATÍSTICAS DO JOGADOR: %', p_SummonerID;
+    RAISE NOTICE '========================================';
+    RAISE NOTICE 'Total de Partidas: %', v_total_partidas;
+    RAISE NOTICE 'Vitórias: % | Derrotas: %', v_total_vitorias, v_total_derrotas;
+    RAISE NOTICE 'Taxa de Vitória: %', v_taxa_vitoria || '%';
+    RAISE NOTICE '----------------------------------------';
+    RAISE NOTICE 'KDA Médio: %', v_kda_medio;
+    RAISE NOTICE 'Total de Kills: % | Deaths: % | Assists: %', v_kills_total, v_deaths_total, v_assists_total;
+    RAISE NOTICE '----------------------------------------';
+    RAISE NOTICE 'Ouro Médio por Partida: %', v_ouro_medio;
+    RAISE NOTICE 'Dano Médio a Campeões: %', v_dano_medio;
+    RAISE NOTICE 'Visão Média: %', v_visao_media;
+    RAISE NOTICE '========================================';
+END;
+$$;

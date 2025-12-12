@@ -1,12 +1,13 @@
 {
-	"name": "PostgreSQL Development Container",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
+	"name": "League of Legends Database Project",
+	"dockerComposeFile": "../docker-compose.yml",
+	"service": "devcontainer",
 	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
 	
 	"features": {
 		"ghcr.io/devcontainers/features/python:1": {
-			"version": "3.13"
+			"version": "3.11"
 		},
 		"ghcr.io/devcontainers/features/git:1": {}
 	},
@@ -16,40 +17,35 @@
 			"extensions": [
 				"ms-python.python",
 				"ms-python.vscode-pylance",
-				"ms-python.debugpy",
-				"cweijan.vscode-postgresql-client2"
+				"cweijan.vscode-postgresql-client2",
+				"grafana.grafana"
 			],
 			"settings": {
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
-				"python.terminal.activateEnvironment": true,
-				"python.analysis.extraPaths": [
-					"${workspaceFolder}"
-				],
-				"terminal.integrated.env.linux": {
-					"PYTHONPATH": "${workspaceFolder}"
-				}
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true
 			}
 		}
 	},
 
-	"postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt && sleep 5 && python utils/database_config.py || echo 'Aguardando banco de dados...'",
+	"forwardPorts": [
+		5432,
+		3000
+	],
 
-	"remoteEnv": {
-		"PYTHONPATH": "${containerWorkspaceFolder}",
-		"DB_HOST": "postgres",
-		"DB_PORT": "5432",
-		"DB_NAME": "banco_dados",
-		"DB_USER": "postgres",
-		"DB_PASSWORD": "postgres"
-	},
-
-	"forwardPorts": [5432],
 	"portsAttributes": {
 		"5432": {
 			"label": "PostgreSQL",
 			"onAutoForward": "notify"
+		},
+		"3000": {
+			"label": "Grafana",
+			"onAutoForward": "notify"
 		}
 	},
 
+	"postCreateCommand": "cd /workspace && pip install --upgrade pip && pip install -r requirements.txt && echo 'Dependências Python instaladas com sucesso!'",
+	"postStartCommand": "echo 'Serviços iniciados: PostgreSQL (5432) e Grafana (3000)'",
+	
 	"remoteUser": "vscode"
 }

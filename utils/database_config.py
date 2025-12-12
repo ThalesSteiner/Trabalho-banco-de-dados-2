@@ -99,6 +99,73 @@ def execute_function(query):
     finally:
         conn.close()
 
+def execute_multiple_statements(sql_text: str, cursor) -> None:
+    """
+    GAMBIARRA PARA EXECUTAR MULTIPLOS COMANDOS SQL SEPARADOS POR PONTO E VÍRGULA.
+    PARA QUE O FLUXO DE DADOS POSSA SER POPULADO VIA ARQUIVO PRECISAMOS ADAPTAR PARA QUE A QUERY POSSA SER LIDA E INSERIDA CORRETAMENTE.
+    """
+    sql_cleaned = sql_text
+    commands = []
+    current_command = []
+    i = 0
+    in_dollar_quote = False
+    dollar_tag = None
+    
+    while i < len(sql_cleaned):
+        char = sql_cleaned[i]
+        
+        if char == '$' and not in_dollar_quote:
+            tag_start = i
+            i += 1
+            while i < len(sql_cleaned) and sql_cleaned[i] != '$':
+                i += 1
+            if i < len(sql_cleaned):
+                i += 1
+                dollar_tag = sql_cleaned[tag_start:i]
+                in_dollar_quote = True
+                current_command.append(dollar_tag)
+                continue
+        
+        # Detecta fim de dollar-quoted string
+        elif char == '$' and in_dollar_quote:
+            tag_start = i
+            j = i + 1
+            while j < len(sql_cleaned) and sql_cleaned[j] != '$':
+                j += 1
+            if j < len(sql_cleaned):
+                j += 1
+                closing_tag = sql_cleaned[tag_start:j]
+                if closing_tag == dollar_tag:
+                    current_command.append(closing_tag)
+                    in_dollar_quote = False
+                    dollar_tag = None
+                    i = j
+                    continue
+            
+            current_command.append(char)
+            i += 1
+            continue
+        
+        current_command.append(char)
+        
+        if not in_dollar_quote and char == ';':
+            command = ''.join(current_command).strip()
+            if command:
+                commands.append(command)
+            current_command = []
+        
+        i += 1
+    
+    if current_command:
+        command = ''.join(current_command).strip()
+        if command:
+            commands.append(command)
+    
+    for command in commands:
+        if command:
+            cursor.execute(command)
+
+
 def test_connection():
     """
     Testa a conexão com o banco de dados

@@ -73,6 +73,5 @@ SELECT
 FROM n.Participacao p
 JOIN n.Stats_Jogador s ON p.GameID = s.GameID AND p.summonerId = s.summonerId
 JOIN n.Time t ON p.GameID = t.GameID AND p.teamId = t.teamId
-WHERE p.individualPosition != 'NONE'
 GROUP BY p.individualPosition
 ORDER BY KDA_Medio DESC;
